@@ -1,3 +1,4 @@
+import { type Rating, countAverage, countTrainingDays, getRating, getRatingDescription } from "./utils.ts";
 
 const calculateExercises = (dailyHours: number[], targetAmount: number): Result => {
     
@@ -9,75 +10,55 @@ const calculateExercises = (dailyHours: number[], targetAmount: number): Result 
         ratingDescription: getRatingDescription(getRating(targetAmount, countAverage(dailyHours))),
         target: targetAmount,
         average: countAverage(dailyHours)
-    }
-
-    
-    
-
-
-    
-}
-
-const getRating = (targetHours: number, actualHours: number) => {
-    
-    let rating: Rating 
-    // if actual hours are more than 90 % of the target, rating is 3
-    if (actualHours >= targetHours*0.9) {
-        rating = 3;
-    }
-    //if actual hours are more than 2/3 of the target hours, rating is 2
-    else if (actualHours >= targetHours*0.66){
-        rating = 2;
-    }
-    else {
-        rating = 1;
-    }
-    return rating;
-    
-    
-    
-}
-
-type Rating = 1 | 2 | 3;
-
-const getRatingDescription = (rating: Rating) => {
-    switch(rating) {
-        case(3):
-            return "Great job! Keep up the good work!";
-        case(2): 
-            return "Not too bad but could be better";
-        case (1):
-            return "This isn't ideal, you can only improve from here";
-    }
-}
-
-const countAverage = (dailyHours: number[]) => {
-    let avg = 0;
-    for (let i = 0; i < dailyHours.length; i++){
-        avg += dailyHours[i]
-    }
-    avg = avg / dailyHours.length
-    return avg;
-}
-
-const countTrainingDays = (dailyHours: number[]) => {
-    let trainingDays = 0;
-    for(let i = 0; i < dailyHours.length; i++){
-        if (dailyHours[i] > 0){
-            trainingDays++;
-        }
-    }
-    return trainingDays;
-}
-
+    };  
+};
 interface Result {
     periodLength: number;
     trainingDays: number;
     success: boolean;
     rating: Rating;
-    ratingDescription: String;
+    ratingDescription: string;
     target: number;
     average: number;
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+interface InputValues {
+    target: number;
+    days: number[];
+}
+
+const parseArgs = (args: string[]): InputValues =>{
+    if(args.length < 4) throw new Error('Not enough arguments');
+    
+    for (let i = 2; i < args.length; i++){
+        if(isNaN(Number(args[i]))){
+            throw new Error('Values given were not numbers');
+        }
+    }
+    const targetGiven: number = Number(args[2]);
+    
+
+    let daysGiven: number[] = [];
+    for(let i = 3; i < args.length; i++){
+        daysGiven = daysGiven.concat(Number(args[i]));
+        
+    }
+    return {
+        target: targetGiven,
+        days: daysGiven
+    };
+};
+if (process.argv[1] === import.meta.filename) {
+    try {
+        const {target, days} = parseArgs(process.argv);
+        console.log(calculateExercises(days, target));
+    } catch (error: unknown) {
+        let errorMessage = 'Something went wrong: ';
+        if (error instanceof Error) {
+        errorMessage += error.message;  
+        }
+        console.log(errorMessage);
+    }
+}
+
+export default calculateExercises;

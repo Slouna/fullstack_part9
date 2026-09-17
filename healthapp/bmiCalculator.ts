@@ -1,10 +1,11 @@
 const calculateBmi = (heightInCm: number, weightInKg: number) => {
-    const heightInMeters = heightInCm /100;
+    
     
     if(heightInCm <= 0 || weightInKg <= 0){
-        return "check the given values";
+        throw new Error("check the given values");
     }
-    
+    const heightInMeters = heightInCm /100;
+
     const bmi = weightInKg / (heightInMeters * heightInMeters);
 
     if (bmi < 18.5) {
@@ -14,12 +15,40 @@ const calculateBmi = (heightInCm: number, weightInKg: number) => {
     } else if (bmi < 29.9) {
         return "overweight";
     } else if (bmi > 30) {
-        return "obese"
+        return "obese";
     } else{
-        return "something went wrong, check the given values"
+        throw new Error("malformatted parameters");
+    }
+};
+
+interface bmiInputValues {
+    height: number;
+    weight: number;
+}
+
+const bmiParseArgs = (args: string[]): bmiInputValues =>{
+    if(args.length < 4) throw new Error('Not enough arguments');
+    if(args.length > 4) throw new Error('Too many arguments');
+    
+    if(!isNaN(Number(args[2])) && !isNaN(Number(args[3]))){
+        return {
+            height: Number(args[2]),
+            weight: Number(args[3])
+    };
+    } else {
+        throw new Error('Values given were not numbers');
+    }
+};
+if (process.argv[1] === import.meta.filename) {
+    try {
+        const {height, weight} = bmiParseArgs(process.argv);
+        console.log(calculateBmi(height, weight));
+    } catch (error: unknown) {
+        let errorMessage = 'Something went wrong: ';
+        if (error instanceof Error) {
+        errorMessage += error.message;  
+        }
+        console.log(errorMessage);
     }
 }
-console.log(calculateBmi(180, 74));
-console.log(calculateBmi(180, 94));
-console.log(calculateBmi(180, 54));
-console.log(calculateBmi(0, 74));
+export default calculateBmi;
