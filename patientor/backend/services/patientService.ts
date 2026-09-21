@@ -1,5 +1,8 @@
 import patientData from '../data/patients.ts' with { type: "json" };
-import type { NoSSNPatient, Patient } from '../types.ts';
+import type { NoSSNPatient, Patient, NewPatientEntry } from '../types.ts';
+import {v1 as uuid} from 'uuid';
+
+
 
 const patients: Patient[] = patientData;
 
@@ -17,7 +20,17 @@ const getNoSSNPatients = (): NoSSNPatient[] => {
     }));
 };
 
+const addNewPatient = (entry: NewPatientEntry): Patient => {
+  const newPatient = {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    id: uuid(),
+    ...entry
+  };
+  return newPatient;
+};
+
 export default {
   getPatients,
-  getNoSSNPatients
+  getNoSSNPatients,
+  addNewPatient
 };
