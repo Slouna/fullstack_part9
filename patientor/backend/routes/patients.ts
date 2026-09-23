@@ -1,6 +1,7 @@
 import express from 'express';
 import patientService from '../services/patientService.ts';
-import parsedPatientEntry from '../utils.ts';
+import {z} from 'zod';
+import { NewPatientSchema } from '../types.ts';
 
 
 const router = express.Router();
@@ -13,15 +14,14 @@ router.get('/', (_req, res) => {
 
 router.post('/', (req, res) => {
   try {
-    const newPatient = parsedPatientEntry(req.body);
+    const newPatient = NewPatientSchema.parse(req.body);
     const addedPatient = patientService.addNewPatient(newPatient);
     res.json(addedPatient);
   } catch (error: unknown){
-    let errorMessage = 'something went wrong.';
-    if (error instanceof Error) {
-      errorMessage += ' Error: ' + error.message;
+    if (error instanceof z.ZodError) {
+      res.status(400).send({error: error.issues});
     }
-    res.status(400).send(errorMessage);
+    res.status(400).send({error: 'unknown error'});
   }
   
 });

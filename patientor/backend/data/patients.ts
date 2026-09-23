@@ -1,3 +1,4 @@
+import { type Patient } from "../types.ts";
 const data = [
     {
         "id": "d2773336-f723-11e9-8f0b-362b9e155667",
@@ -39,6 +40,6 @@ const data = [
         "gender": "male",
         "occupation": "Digital evangelist"
     }
-];
+] satisfies Patient[];
 
 export default data;
