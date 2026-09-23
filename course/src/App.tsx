@@ -85,37 +85,33 @@ interface CourseWithDescription extends CoursePartBase{
 
 type CoursePart = CoursePartBasic | CoursePartGroup | CoursePartBackground | CoursePartSpecial;
 
-const Part = (props: PartProps) => {
-  switch(props.part.kind){
+const Part = (part : CoursePart ) => {
+  switch(part.kind){
     case "basic":
       return(
-        <div><strong>{props.part.name} {props.part.exerciseCount}</strong>
-        <p><i>{props.part.description}</i></p></div>
+        <div><strong>{part.name} {part.exerciseCount}</strong>
+        <p><i>{part.description}</i></p></div>
       );
     case "group":
       return(
-        <div><strong>{props.part.name} {props.part.exerciseCount}</strong>
-        <p>project exercises {props.part.exerciseCount}</p></div>
+        <div><strong>{part.name} {part.exerciseCount}</strong>
+        <p>project exercises {part.exerciseCount}</p></div>
       );
     case "background":
       return(
-        <div><strong>{props.part.name} {props.part.exerciseCount}</strong>
-        <p><i>{props.part.description}</i></p>
-        <p>submit to {props.part.backgroundMaterial}</p></div>
+        <div><strong>{part.name} {part.exerciseCount}</strong>
+        <p><i>{part.description}</i></p>
+        <p>submit to {part.backgroundMaterial}</p></div>
       )
     case "special":
       return(
-        <div><strong>{props.part.name} {props.part.exerciseCount}</strong>
-        <p><i>{props.part.description}</i></p>
-        <p>required skills: {props.part.requirements.map(r => <>{r}, </>)}</p></div>
+        <div><strong>{part.name} {part.exerciseCount}</strong>
+        <p><i>{part.description}</i></p>
+        <p>required skills: {part.requirements.map((r: string) => <>{r}, </>)}</p></div>
       )
   }
 }
 
-interface PartProps{
-  part: CoursePart;
-  
-}
 
 const Total = (props: TotalProps) => {
   return (
@@ -130,7 +126,7 @@ interface TotalProps{
 const Content = (props: ContentProps) => {
   return(
     <div>
-      {props.parts.map(part => <div key={part.name}>{<Part part={part} />}</div> )}
+      {props.parts.map(part => <div key={part.name}>{<Part {...part } />}</div> )}
     </div>
   )
 
