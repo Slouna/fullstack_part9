@@ -21,7 +21,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', newDiaryParser, (req: Request<unknown, unknown, NewDiaryEntry>, res: Response<DiaryEntry>) => {  
-  const addedEntry = diaryService.addDiary(req.body);  
+  const addedEntry = diaryService.addDiary(req.body);
   res.json(addedEntry);
 });
 
