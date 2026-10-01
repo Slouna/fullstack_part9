@@ -2,6 +2,7 @@ import express from 'express';
 import patientService from '../services/patientService.ts';
 import {z} from 'zod';
 import { NewPatientSchema } from '../types.ts';
+import { id } from 'zod/locales';
 
 
 const router = express.Router();
@@ -10,6 +11,14 @@ router.get('/', (_req, res) => {
   const data = patientService.getNoSSNPatients();
   res.send(data);
 });
+
+router.get('/:id', async (req, res)=> {
+  const patient = patientService.findById(req.params.id);
+  if (!patient) {
+    res.status(400).send('Could not find the patient')
+  }
+  res.status(200).json(patient);
+})
 
 
 router.post('/', (req, res) => {

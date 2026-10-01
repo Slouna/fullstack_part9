@@ -1,10 +1,36 @@
 import patientData from '../data/patients.ts' with { type: "json" };
-import type { NoSSNPatient, Patient, NewPatientEntry } from '../types.ts';
+import type { NoSSNPatient, NewPatientEntry, Gender } from '../types.ts';
 import {v1 as uuid} from 'uuid';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface Entry {
+}
 
+export interface Patient {
+  id: string;
+  name: string;
+  ssn: string;
+  occupation: string;
+  gender: Gender;
+  dateOfBirth: string;
+  entries: Entry[]
+}
 
-const patients: Patient[] = patientData;
+export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
+
+const patients: Patient[] = patientData.map(patient => ({
+  ...patient,
+  entries: []
+}));
+
+const findById = (id:string): Patient | null =>{
+  const patient = patients.find(p => p.id === id);
+  if (patient){
+    return patient;
+  }else {
+    return null;
+  }
+}
 
 const getPatients = (): NoSSNPatient[] => {
   return patients;
@@ -24,7 +50,8 @@ const addNewPatient = (entry: NewPatientEntry): Patient => {
   const newPatient = {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     id: uuid(),
-    ...entry
+    ...entry,
+    entries: []
   };
   return newPatient;
 };
@@ -32,5 +59,6 @@ const addNewPatient = (entry: NewPatientEntry): Patient => {
 export default {
   getPatients,
   getNoSSNPatients,
-  addNewPatient
+  addNewPatient,
+  findById
 };

@@ -27,9 +27,9 @@ const NewDiaryEntryForm = (props: NewEntryFormProps) => {
           value="sunny"
           defaultChecked={true}
         />{" "}
-        | Rainy <input type="radio" name="weather" value="rainy" /> | Cloudy{" "}
-        <input type="radio" name="weather" value="cloudy" /> | Stormy{" "}
-        <input type="radio" name="weather" value="stormy" /> | Windy{" "}
+        | Rainy <input type="radio" name="weather" value="rainy" />| Cloudy{" "}
+        <input type="radio" name="weather" value="cloudy" />| Stormy{" "}
+        <input type="radio" name="weather" value="stormy" />| Windy{" "}
         <input type="radio" name="weather" value="windy" />|<p></p>
         comment:{" "}
         <input
