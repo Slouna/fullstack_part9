@@ -9,7 +9,7 @@ export interface Diagnosis {
 export enum Gender {
   Male = "male",
   Female = "female",
-  Other = "other"
+  Other = "other",
 }
 
 export interface Patient {
@@ -23,10 +23,7 @@ export interface Patient {
 }
 
 export type Entry =
-  | HealthCheckEntry
-  | HospitalEntry
-  | OccupationalHealthcareEntry;
-
+  HealthCheckEntry | HospitalEntry | OccupationalHealthcareEntry;
 
 export const HealthCheckRating = {
   Healthy: 0,
@@ -45,23 +42,23 @@ interface Discharge {
   criteria: string;
 }
 
-export type HealthCheckRating = typeof HealthCheckRating[keyof typeof HealthCheckRating];
+export type HealthCheckRating =
+  (typeof HealthCheckRating)[keyof typeof HealthCheckRating];
 
 interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
 }
 
-interface HospitalEntry extends BaseEntry{
+interface HospitalEntry extends BaseEntry {
   type: "Hospital";
   discharge: Discharge;
 }
 
-interface OccupationalHealthcareEntry extends BaseEntry{
-  type: 'OccupationalHealthcare';
+interface OccupationalHealthcareEntry extends BaseEntry {
+  type: "OccupationalHealthcare";
   employerName: string;
   sickLeave?: SickLeave;
-  
 }
 
 interface BaseEntry {
@@ -69,13 +66,10 @@ interface BaseEntry {
   description: string;
   date: string;
   specialist: string;
-  diagnosisCodes?: Array<Diagnosis['code']>;
+  diagnosisCodes?: Array<Diagnosis["code"]>;
 }
 
-export type EntryType =
-  | "HealthCheck"
-  | "OccupationalHealthcare"
-  | "Hospital";
+export type EntryType = "HealthCheck" | "OccupationalHealthcare" | "Hospital";
 
 export type NewEntry = DistributiveOmit<Entry, "id">;
 

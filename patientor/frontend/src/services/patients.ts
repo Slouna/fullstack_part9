@@ -4,36 +4,33 @@ import { NewEntry, Patient, PatientFormValues } from "../types";
 import { apiBaseUrl } from "../constants";
 
 const getAll = async () => {
-  const { data } = await axios.get<Patient[]>(
-    `${apiBaseUrl}/patients`
-  );
+  const { data } = await axios.get<Patient[]>(`${apiBaseUrl}/patients`);
 
   return data;
 };
 
 const getById = async (id: string) => {
-  const response = await axios.get<Patient>(
-    `${apiBaseUrl}/patients/${id}`
-  );
+  const response = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
   return response.data;
-
 };
 
 const create = async (object: PatientFormValues) => {
-  const { data } = await axios.post<Patient>(
-    `${apiBaseUrl}/patients`,
-    object
-  );
+  const { data } = await axios.post<Patient>(`${apiBaseUrl}/patients`, object);
 
   return data;
 };
 
-const createEntry = async(id: string, entry: NewEntry) => {
-  const {data} = await axios.post(`${apiBaseUrl}/patients/${id}/entries`, entry);
+const createEntry = async (id: string, entry: NewEntry) => {
+  const { data } = await axios.post(
+    `${apiBaseUrl}/patients/${id}/entries`,
+    entry,
+  );
   return data;
 };
 
 export default {
-  getAll, create, getById, createEntry
+  getAll,
+  create,
+  getById,
+  createEntry,
 };
-
