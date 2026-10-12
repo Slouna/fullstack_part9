@@ -1,10 +1,9 @@
 import patientData from '../data/patients.ts' with { type: "json" };
-import type { NoSSNPatient, NewPatientEntry, Gender } from '../types.ts';
+import { type NoSSNPatient, type NewPatientEntry, type Gender, type Entry, type NewEntryItem } from '../types.ts';
 import {v1 as uuid} from 'uuid';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface Entry {
-}
+
+
 
 export interface Patient {
   id: string;
@@ -13,15 +12,12 @@ export interface Patient {
   occupation: string;
   gender: Gender;
   dateOfBirth: string;
-  entries: Entry[]
+  entries: Entry[];
 }
 
 export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 
-const patients: Patient[] = patientData.map(patient => ({
-  ...patient,
-  entries: []
-}));
+const patients: Patient[] = patientData;
 
 const findById = (id:string): Patient | null =>{
   const patient = patients.find(p => p.id === id);
@@ -30,25 +26,25 @@ const findById = (id:string): Patient | null =>{
   }else {
     return null;
   }
-}
+};
 
 const getPatients = (): NoSSNPatient[] => {
   return patients;
 };
 
 const getNoSSNPatients = (): NoSSNPatient[] => {
-    return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
+    return patients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
       id,
       name,
       dateOfBirth,
       gender,
-      occupation
+      occupation,
+      entries
     }));
 };
 
 const addNewPatient = (entry: NewPatientEntry): Patient => {
   const newPatient = {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     id: uuid(),
     ...entry,
     entries: []
@@ -56,9 +52,24 @@ const addNewPatient = (entry: NewPatientEntry): Patient => {
   return newPatient;
 };
 
+const addNewEntryForPatient = (id: string, entry: NewEntryItem) => {
+  const patient = findById(id);
+  if(!patient){
+    return;
+  }
+  const newEntry = {
+    ...entry,
+    id: uuid()
+  };
+  patient.entries.push(newEntry);
+
+  return newEntry;
+};
+
 export default {
   getPatients,
   getNoSSNPatients,
   addNewPatient,
-  findById
+  findById,
+  addNewEntryForPatient
 };
